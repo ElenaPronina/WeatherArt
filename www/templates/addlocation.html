@@ -1,0 +1,34 @@
+<ion-modal-view cache-view="false" ng-controller="AddCityCtrl">
+ 
+
+<div class="bar bar-header item-input-inset grey">
+  <label class="item-input-wrapper">
+    <i class="icon ion-ios-search placeholder-icon"></i>
+    <input class="white" type="search" 
+                 ng-model="city"
+                ng-model-options="{ debounce: 300 }"
+                placeholder="Enter city name"/>
+  </label>
+  <button class="button button-clear grey" ng-click="closeAddLocation()">
+    Cancel
+  </button>
+</div>
+<ion-content class="addlocation" >
+     
+        
+        <!-- keep the list of cities clean when input has nothing in it -->
+        <div ng-if="!city" >
+        </div>
+
+        <!-- when something is typed in, do the search and populate the list -->
+        <div ng-if="city" >
+          <ion-list>
+            <ion-item class="white" ng-repeat="location in details" href="#/app/home/{{location.woeid}}/{{location.name}}" ng-click="closeAddLocation()">
+              {{location.name}}, {{location.country}}, {{location.woeid}}
+            </ion-item>
+          </ion-list>
+        </div>
+
+     
+  </ion-content>
+  </ion-modal-view>

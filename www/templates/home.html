@@ -1,0 +1,20 @@
+<ion-view   class="fon" ng-style="{'background-image':'url(' + backgroundImage + ')'}">
+     <ion-nav-title>
+     <span class="city">{{cityname}}</span>
+      </ion-nav-title>  
+
+<ion-content  >
+  <h4 class="quote">{{quote}}</h4>
+ <h6 class="autor">{{author}}</h6>
+ <!-- <h6>{{backgroundImage}}</h6>-->
+</ion-content>
+
+<ion-footer-bar align-title="left" class="bar-clear">
+  <div ng-controller="WeatherCtrl">
+    <h3 class="text">   {{forecast.query.results.channel.item.condition.text}}
+    <img class="weather" src="http://l.yimg.com/a/i/us/we/52/{{forecast.query.results.channel.item.condition.code}}.gif" align="left" /> </h3>
+    <h1 class="temperature">{{forecast.query.results.channel.item.condition.temp}}&#176C</h1>
+  </div>
+</ion-footer-bar>
+      
+</ion-view>

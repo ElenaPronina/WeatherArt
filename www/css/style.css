@@ -1,0 +1,96 @@
+/* Empty. Add your own CSS if you like */
+
+
+
+.fon {
+ 	background: 
+	no-repeat center center fixed  ;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+    
+}
+
+.bar-clear {
+	background:transparent !important;
+	color:white;
+}
+.city {
+	text-shadow: 1px 1px 4px #000;
+}
+
+.quote, .autor {
+	color:white;
+	text-align: center;
+	width:80%;
+	margin:20px auto;
+	text-shadow: 1px 1px 4px #000;
+}
+.grey{
+	background: #454545 !important;
+	color:white;
+}
+	
+.temperature {
+	font-size: 3em !important;
+	color:white;
+	padding-left: 20px !important;
+   text-shadow: 1px 1px 4px #000;
+	
+}
+ion-footer-bar {
+	height: 100px !important;
+
+}
+.text {
+ font-size: 1.2em  !important;
+ color:white;
+ vertical-align:text-bottom;
+ text-shadow: 1px 1px 4px #000;
+}
+
+.black {
+	background: black !important;
+}
+
+
+}.weather {
+	height:30px;
+	margin:5px;
+}
+.item-dark{
+	background: #000 !important;
+}
+ion-modal-view {
+	background: #000 !important;
+}
+
+.share{
+	padding-top: 20px;
+}
+.button-bar>.button{
+	background: #000 !important;
+	color:white;
+	font-size: 1em;
+}
+label{
+	background: #000 !important;
+	
+}
+.input-label{
+	color:white;
+}
+select, .item-toggle, .white{
+	background: #000 !important;
+	color:white !important;
+}
+
+option  {
+	background: #000 !important;
+	color:white !important;
+}
+.addlocation{
+	padding-top: 50px;
+}
+

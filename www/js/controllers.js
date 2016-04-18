@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('MenuCtrl', function($scope, $ionicModal, $timeout) {
+.controller('MenuCtrl', function($scope, $ionicModal, $timeout, WeatherService) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -11,6 +11,10 @@ angular.module('starter.controllers', [])
 
   // Form data for the login modal
   $scope.settingsData = {};
+
+  $scope.WeatherService=WeatherService;
+
+  $scope.temp='f';
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/settings.html', {
@@ -42,7 +46,7 @@ angular.module('starter.controllers', [])
 
 
 $scope.shareData = {};
-  
+
   $ionicModal.fromTemplateUrl('templates/share.html', {
     scope: $scope
   }).then(function(modal) {
@@ -71,7 +75,7 @@ $scope.shareData = {};
   };
 
 $scope.locationData = {};
-  
+
   $ionicModal.fromTemplateUrl('templates/location.html', {
     scope: $scope
   }).then(function(modal) {
@@ -100,7 +104,7 @@ $scope.locationData = {};
   };
 
   $scope.addLocationData = {};
-  
+
   $ionicModal.fromTemplateUrl('templates/addlocation.html', {
     scope: $scope
   }).then(function(modal) {
@@ -131,7 +135,7 @@ $scope.locationData = {};
 
 })
 
-.controller('WeatherCtrl', function($scope, $stateParams, $http) {
+.controller('WeatherCtrl', function($scope, $stateParams, $http, WeatherService) {
   var quotes = '{ \
   "quotes": [ \
     {   "quote": "Everybody talks about the weather, but nobody does anything about it.", \
@@ -182,110 +186,104 @@ $scope.locationData = {};
          {      "quote":"Who cares about the clouds when we are together? Just sing a song and bring the sunny weather.",\
                 "author": "Dale Evans"\
      } \
- ]\
-}';
+   ]\
+  }';
 
-var quote=JSON.parse(quotes);
-var i = Math.floor(Math.random()*16);
-$scope.quote=quote.quotes[i].quote;
-$scope.author=quote.quotes[i].author;
-
+  var quote=JSON.parse(quotes);
+  var i = Math.floor(Math.random()*16);
+  $scope.quote=quote.quotes[i].quote;
+  $scope.author=quote.quotes[i].author;
 
   $scope.backgroundImage = "img/wind.jpg";
- 
-   $scope.citywoeid = $stateParams.citywoeid;
+
+  $scope.citywoeid = $stateParams.citywoeid;
   $scope.cityname = $stateParams.cityname;
 
-//  $http.get("https://query.yahooapis.com/v1/public/yql?q=select%20woeid%20from%20geo.places(1)%20where%20text%3D%22dublin%22&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys").
-  $http.get("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%3D" 
-              + $scope.citywoeid
-              + "%20and%20u%3D%22c%22&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys")
-  .success(function(data) {
-    $scope.forecast = data;
-    var conditionCode = data.query.results.channel.item.condition.code;
-    var temperature = data.query.results.channel.item.condition.temp;
+  var refreshWeather=function(){
+      WeatherService.getWeather($scope.citywoeid).success(function(data) {
+      $scope.forecast = data;
+      var conditionCode = data.query.results.channel.item.condition.code;
+      var temperature = data.query.results.channel.item.condition.temp;
 
-    $scope.backgroundImage = pickRandomImage(conditionCode, temperature);
+      $scope.backgroundImage = pickRandomImage(conditionCode, temperature);
+    });
+  };
 
-  });  
+  refreshWeather();
 
-var photos=
-{ 
-  clear:['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg'],
-  cloudy:['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg'],
-  fog:['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg','8.jpg','9.jpg'],
-  rain:['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg','9.jpg', '10.jpg'],
-  snow:['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg'],
-  wind:['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg']
-}
+  $scope.$watch('WeatherService.temp', refreshWeather);
 
-var weatherFromCode = function (code){
-  if(code<=12){
-    return "rain";
+  var photos=
+  {
+    clear:['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg'],
+    cloudy:['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg'],
+    fog:['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg','8.jpg','9.jpg'],
+    rain:['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg','9.jpg', '10.jpg'],
+    snow:['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg'],
+    wind:['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg']
   }
- else if (code<=17){
-  return "snow";
-   }
-   else if (code==18){
-     return "rain";
-   }
-   else if (code<=22){
-  return "fog";
-   }
-   else if (code<=24){
-     return "wind";
-   }
-   else if (code==25){
-     return "snow";
-   }
-  else if (code<=30){
-  return "cloudy";
-   }
-   else if (code<=34){
-  return "clear";
-   }
-  else if (code==35){
-     return "rain";
-   }
-  else if (code==36){
-     return "clear";
-   }
-  else if (code<=40){
-     return "rain";
-   }
-  else if (code<=43){
-     return "snow";
-   }
-   else if (code==44){
+
+  var weatherFromCode = function (code){
+    if(code<=12){
+      return "rain";
+    }
+   else if (code<=17){
+    return "snow";
+     }
+     else if (code==18){
+       return "rain";
+     }
+     else if (code<=22){
+    return "fog";
+     }
+     else if (code<=24){
+       return "wind";
+     }
+     else if (code==25){
+       return "snow";
+     }
+    else if (code<=30){
     return "cloudy";
-   }
-   else {
-     return "rain";
-   }
-};
+     }
+     else if (code<=34){
+    return "clear";
+     }
+    else if (code==35){
+       return "rain";
+     }
+    else if (code==36){
+       return "clear";
+     }
+    else if (code<=40){
+       return "rain";
+     }
+    else if (code<=43){
+       return "snow";
+     }
+     else if (code==44){
+      return "cloudy";
+     }
+     else {
+       return "rain";
+     }
+  };
 
-
-  
- var pickRandomImage=function(code, temperature){
+  var pickRandomImage=function(code, temperature){
     var weatherType = weatherFromCode(code);
     if (temperature<4){
       weatherType = 'snow';
     }
 
-
-    
     var listOfImages = photos[weatherType];
     //console.log(listOfImages);
 
     var imageNumber = Math.floor((Math.random() * listOfImages.length));
-    
+
     var photo = listOfImages[imageNumber];
     var imagePath="img/" + weatherType +"/"+photo;
     console.log(imagePath);
     return imagePath;
- };
-
-  
+  };
 })
 
 .controller('AddCityCtrl', function($scope, $http) {
@@ -295,14 +293,18 @@ var weatherFromCode = function (code){
     }
   });
 
+  $scope.clearCity=function(){
+   $scope.city = null;
+  };
+
   function fetch() {
     $http.get("https://query.yahooapis.com/v1/public/yql?q=select%20woeid%2Cname%2Ccountry.content%20from%20geo.places%20where%20text%3D%22"
                 + $scope.city
                 + "*%22&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys")
-    .then(function(response) { 
+    .then(function(response) {
       console.log("Add City Ctrl");
       console.log(response.data.query);
-      $scope.details = response.data.query.results.place; 
+      $scope.details = response.data.query.results.place;
     });
   }
 });

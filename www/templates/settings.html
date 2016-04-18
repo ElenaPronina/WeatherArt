@@ -7,17 +7,19 @@
  </ion-header-bar>
 
  <ion-content>
- 
+
 
   <label class="item item-input item-select item-clear">
     <div class="input-label">
       Temperature
     </div>
-    <select>
-      <option>F</option>
-      <option selected>C</option>
+    <select ng-model='WeatherService.temp'>
+      <option value='f'>F</option>
+      <option selected value='c'>C</option>
     </select>
   </label>
+
+
 
    <label class="item item-input item-select item-clear">
   <div class="input-label">

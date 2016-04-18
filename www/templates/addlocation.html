@@ -19,9 +19,8 @@
     <div ng-if="city" >
       <ion-list>
         <ion-item class="white" ng-repeat="location in details"
-                ui-sref="app.home({ citywoeid: location.woeid, cityname: location.name})"
-                ng-click="closeAddLocation(); clearCity();">
-          {{location.name}}, {{location.country}}, {{location.woeid}}
+                ng-click="closeAddLocation({ citywoeid: location.woeid, cityname: location.name}); clearCity();">
+        {{location.name}}, {{location.country}}, {{location.woeid}}
         </ion-item>
       </ion-list>
     </div>

@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('MenuCtrl', function($scope, $ionicModal, $timeout, WeatherService) {
+.controller('MenuCtrl', function($scope, $ionicModal, $timeout, WeatherService, $state, $ionicHistory) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -44,8 +44,7 @@ angular.module('starter.controllers', [])
     }, 1000);
   };
 
-
-$scope.shareData = {};
+  $scope.shareData = {};
 
   $ionicModal.fromTemplateUrl('templates/share.html', {
     scope: $scope
@@ -74,7 +73,7 @@ $scope.shareData = {};
     }, 1000);
   };
 
-$scope.locationData = {};
+  $scope.locationData = {};
 
   $ionicModal.fromTemplateUrl('templates/location.html', {
     scope: $scope
@@ -112,8 +111,12 @@ $scope.locationData = {};
   });
 
   // Triggered in the login modal to close it
-  $scope.closeAddLocation = function() {
+  $scope.closeAddLocation = function($new_location) {
     $scope.addLocationModal.hide();
+    $ionicHistory.nextViewOptions({
+      disableBack: true
+    });
+    $state.go('app.home', $new_location, {location: 'replace'});
   };
 
   // Open the login modal
@@ -131,8 +134,6 @@ $scope.locationData = {};
       $scope.closeAddLocation();
     }, 1000);
   };
-
-
 })
 
 .controller('WeatherCtrl', function($scope, $stateParams, $http, WeatherService) {
@@ -194,13 +195,11 @@ $scope.locationData = {};
   $scope.quote=quote.quotes[i].quote;
   $scope.author=quote.quotes[i].author;
 
-  $scope.backgroundImage = "img/wind.jpg";
-
   $scope.citywoeid = $stateParams.citywoeid;
   $scope.cityname = $stateParams.cityname;
 
   var refreshWeather=function(){
-      WeatherService.getWeather($scope.citywoeid).success(function(data) {
+    WeatherService.getWeather($scope.citywoeid).success(function(data) {
       $scope.forecast = data;
       var conditionCode = data.query.results.channel.item.condition.code;
       var temperature = data.query.results.channel.item.condition.temp;
